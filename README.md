@@ -3,10 +3,10 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=%E2%9A%A1%20LeetCode%20Arena&fontSize=60&fontColor=fff&animation=twinkling&fontAlignY=36&desc=Where%20Algorithms%20Meet%20Artistry&descSize=20&descAlignY=58&descColor=a0f0ff" width="100%"/>
 
 <a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=22&duration=3000&pause=800&color=00D9FF&center=true&vCenter=true&multiline=true&width=700&height=80&lines=615+Problems+Solved+%E2%9C%94%EF%B8%8F;Knight+%F0%9F%8F%85+%7C+Contest+Rating+1506;308-Day+Max+Streak+%F0%9F%94%A5;Top+42.65%25+Globally+%F0%9F%8C%8D" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=20&duration=3000&pause=800&color=00D9FF&center=true&vCenter=true&multiline=true&width=700&height=130&lines=615+Problems+Solved+%E2%9C%94%EF%B8%8F;Knight+%F0%9F%8F%85+%7C+Contest+Rating+1506;308-Day+Max+Streak+%F0%9F%94%A5;Top+42.65%25+Globally+%F0%9F%8C%8D" alt="Typing SVG" />
 </a>
 
-<br/>
+<br/><br/>
 
 <p>
   <a href="https://leetcode.com/u/adarsh__singh_/">
