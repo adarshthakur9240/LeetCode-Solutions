@@ -1,75 +1,107 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 class Solution {
 public:
-    struct Edge {
-        int to;
-        int weight;
+    struct Node {
+        int dist;
+        int id;
+        int run;
+        int last;
+
+        bool operator>(const Node& other) const {
+            return dist > other.dist;
+        }
     };
 
-    int shortestPath(
-        int n,
-        vector<vector<int>>& edges,
-        string labels,
-        int k
-    ) {
-        vector<vector<Edge>> graph(n);
+    static long long encode(int node, int run, int last) {
+        return ((long long)node << 16) |
+               ((long long)run << 8) |
+               last;
+    }
 
-        for (const auto& edge : edges) {
-            graph[edge[0]].push_back({edge[1], edge[2]});
+    int shortestPath(int n, vector<vector<int>>& edges,
+                     string labels, int k) {
+
+        vector<vector<pair<int,int>>> g(n);
+
+        for (auto &e : edges) {
+            g[e[0]].push_back({e[1], e[2]});
         }
 
-        using State = tuple<long long, int, int>;
-        priority_queue<State, vector<State>, greater<State>> pq;
+        unordered_map<long long, int> dist;
+        dist.reserve(edges.size() * 4);
 
-        // Use a flat array to reduce vector overhead and memory fragmentation.
-        const long long INF = LLONG_MAX;
-        vector<long long> dist(static_cast<size_t>(n) * (k + 1), INF);
+        priority_queue<Node,
+                       vector<Node>,
+                       greater<Node>> pq;
 
-        auto id = [k](int node, int runLength) -> size_t {
-            return static_cast<size_t>(node) * (k + 1) + runLength;
-        };
+        int startChar = labels[0] - 'a';
 
-        dist[id(0, 1)] = 0;
-        pq.emplace(0LL, 0, 1);
+        long long startKey = encode(0, 1, startChar);
+
+        dist[startKey] = 0;
+
+        pq.push({0, 0, 1, startChar});
 
         while (!pq.empty()) {
-            auto [currentDistance, node, runLength] = pq.top();
+            auto cur = pq.top();
             pq.pop();
 
-            if (currentDistance != dist[id(node, runLength)]) {
+            long long curKey =
+                encode(cur.id, cur.run, cur.last);
+
+            auto it = dist.find(curKey);
+
+            if (it == dist.end() || it->second != cur.dist)
                 continue;
-            }
 
-            if (node == n - 1) {
-                return static_cast<int>(currentDistance);
-            }
+            for (auto &[v, w] : g[cur.id]) {
 
-            for (const auto& edge : graph[node]) {
-                int nextNode = edge.to;
+                int chr = labels[v] - 'a';
 
-                int nextRunLength =
-                    labels[node] == labels[nextNode]
-                        ? runLength + 1
-                        : 1;
+                int nextRun;
 
-                if (nextRunLength > k) {
-                    continue;
+                if (chr == cur.last) {
+                    nextRun = cur.run + 1;
+
+                    if (nextRun > k)
+                        continue;
+                } else {
+                    nextRun = 1;
                 }
 
-                long long nextDistance =
-                    currentDistance + edge.weight;
+                int nd = cur.dist + w;
 
-                size_t nextState = id(nextNode, nextRunLength);
+                long long nxtKey =
+                    encode(v, nextRun, chr);
 
-                if (nextDistance < dist[nextState]) {
-                    dist[nextState] = nextDistance;
-                    pq.emplace(nextDistance, nextNode, nextRunLength);
+                auto jt = dist.find(nxtKey);
+
+                if (jt == dist.end() || nd < jt->second) {
+                    dist[nxtKey] = nd;
+                    pq.push({
+                        nd,
+                        v,
+                        nextRun,
+                        chr
+                    });
                 }
             }
         }
 
-        return -1;
+        int ans = INT_MAX;
+
+        for (int run = 1; run <= k; run++) {
+            for (int c = 0; c < 26; c++) {
+                auto it =
+                    dist.find(
+                        encode(n - 1, run, c)
+                    );
+
+                if (it != dist.end()) {
+                    ans = min(ans, it->second);
+                }
+            }
+        }
+
+        return ans == INT_MAX ? -1 : ans;
     }
 };
